@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/output.css" rel="stylesheet">
+    <link rel="icon" href="/files/icon.ico">
+
+    <title>Smart Helm</title>
+</head>
+
+<body class="font-poppins text-sahur">
+    <main class=" w-full h-20 px-10 flex flex-col items-center">
+        <section class=" w-full max-w-4xl mt-20 flex flex-col gap-40" id="main-section">
+            <div class="flex flex-col gap-10">
+                <div class="flex flex-col items-center gap-2">
+                    <p class="bg-tungtung text-center px-3 py-1 rounded-full text-white font-semibold w-fit">~2 min</p>
+                    <h1 class="text-4xl font-semibold text-center">Smart-helm Vormgevingsexperiment</h1>
+                </div>
+                <p>We werken aan een slimme helm die je helpt gevaar van achteren te herkennen. In deze korte test zie
+                    je meerdere helmontwerpen. Telkens krijgt u één simpele vraag.</p>
+                <p class="bg-sahur text-white py-3 px-3 font-semibold rounded-full">Klik op de helm die u het best vindt
+                    passen bij de
+                    vraag!</p>
+            </div>
+            <div class="flex flex-col gap-10">
+                <div>
+                    <h2 class="text-tungtung text-2xl font-semibold" id="question-title">Welke helm vind u het mooist?
+                    </h2>
+                    <p class="font-medium italic opacity-70" id="question-counter">1/10</p>
+                </div>
+                <div class="grid gap-10 grid-cols-3 grid-flow-row" id="buttons-container">
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const questions = [
+            "Welke helm vind u het mooist?",
+            "Welke helm lijkt u het veiligst?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+            "Welke helm zou u het liefst dragen?",
+        ];
+        const buttonConfigs = [
+            { value: '1', front: '/helmets/1f.png', back: '/helmets/1b.png' },
+            { value: '2', front: '/helmets/2f.png', back: '/helmets/2b.png' },
+            { value: '3', front: '/helmets/1f.png', back: '/helmets/1b.png' },
+            { value: '4', front: '/helmets/2f.png', back: '/helmets/2b.png' },
+            { value: '5', front: '/helmets/1f.png', back: '/helmets/1b.png' },
+            { value: '6', front: '/helmets/2f.png', back: '/helmets/2b.png' },
+        ];
+        let answers = [];
+        let currentQuestion = 0;
+
+        const questionTitle = document.getElementById('question-title');
+        const questionCounter = document.getElementById('question-counter');
+        const buttonsContainer = document.getElementById('buttons-container');
+        const mainSection = document.getElementById('main-section');
+
+        function showQuestion(idx) {
+            questionTitle.textContent = questions[idx];
+            questionCounter.textContent = `${idx + 1}/${questions.length}`;
+            buttonsContainer.innerHTML = '';
+            buttonConfigs.forEach(btnData => {
+                const btn = document.createElement('button');
+                btn.className = "bg-gray-300 cursor-pointer group relative overflow-hidden";
+                btn.innerHTML = `
+                    <img src="${btnData.front}" alt="" class="transition-opacity duration-300 opacity-100 group-hover:opacity-0 absolute inset-0 w-full h-full object-contain" />
+                    <img src="${btnData.back}" alt="" class="transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute inset-0 w-full h-full object-contain" />
+                    <img src="${btnData.front}" alt="" class="invisible w-full h-full object-contain" />
+                `;
+                btn.onclick = () => handleAnswer(btnData.value);
+                buttonsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(answer) {
+            answers.push(answer);
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion(currentQuestion);
+            } else {
+                sendAnswers();
+            }
+        }
+
+        function sendAnswers() {
+            mainSection.innerHTML = `
+                <div class="flex flex-col items-center gap-6">
+                    <div class="text-xl font-semibold">Bijna klaar!</div>
+                    <label class="flex flex-col gap-2 w-full max-w-xs">
+                        <span class="font-medium">Leeftijd:</span>
+                        <input type="number" id="user-age" min="0" max="120" required class="border rounded px-3 py-2" placeholder="Vul je leeftijd in">
+                    </label>
+                    <label class="flex flex-col gap-2 w-full max-w-xs">
+                        <span class="font-medium">In welke context gebruikt u meestal een helm? (optioneel)</span>
+                        <input type="text" id="user-context" class="border rounded px-3 py-2" placeholder="Bijv. fietsen, werk, etc.">
+                    </label>
+                    <button id="submit-form" class="bg-tungtung text-white font-bold rounded px-6 py-3 mt-2 hover:bg-sahur transition-colors">Verzenden</button>
+                </div>
+            `;
+            document.getElementById('submit-form').onclick = submitForm;
+        }
+
+        function submitForm() {
+            const age = document.getElementById('user-age').value;
+            const context = document.getElementById('user-context').value;
+            if (!age) {
+                alert('Vul alstublieft uw leeftijd in.');
+                return;
+            }
+            const url = "https://script.google.com/macros/s/AKfycbyZzsGmrmuwVOkT8C5y6ORCdtH_s7EtDjAPcr_WIEO9mrcxoBw8nrazw1CcjwysMHWY/exec";
+            fetch(url, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ answers, age, context })
+            });
+            mainSection.innerHTML = '<div class="text-center text-2xl font-semibold">Bedankt voor het invullen!</div>';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showQuestion(0);
+        });
+    </script>
+</body>
+
+</html>
