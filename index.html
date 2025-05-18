@@ -40,25 +40,23 @@
 
     <script>
         const questions = [
-            "Welke helm vind u het mooist?",
-            "Welke helm lijkt u het veiligst?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
-            "Welke helm zou u het liefst dragen?",
+            "Welke helmvorm heeft het grootste wow-effect?",
+            "Welke ontwerp past het beste bij het idee van een ‘smart helm’?",
+            "Met welke helm zou u het meest comfortabel over straat lopen?",
+            "Welke helm oogt het meest neutraal?",
+            "Welke helm straalt de meeste veiligheid uit (qua vormgeving)?",
+            "Welke helm spreekt u het minst aan qua design?",
+            "Welke helm oogt het meest geschikt voor intensieve sportactiviteiten?",
+            "Welke helm lijkt het meest geschikt voor fietsen in het dagelijks verkeer?",
+            "Welke helm ziet er het meest premium uit?",
+            "Als u er één moest kopen, puur op uiterlijk, welke zou u dan kiezen?",
         ];
         const buttonConfigs = [
             { value: '1', front: 'helmets/1f.png', back: 'helmets/1b.png' },
             { value: '2', front: 'helmets/2f.png', back: 'helmets/2b.png' },
-            { value: '3', front: 'helmets/1f.png', back: 'helmets/1b.png' },
-            { value: '4', front: 'helmets/2f.png', back: 'helmets/2b.png' },
-            { value: '5', front: 'helmets/1f.png', back: 'helmets/1b.png' },
-            { value: '6', front: 'helmets/2f.png', back: 'helmets/2b.png' },
+            { value: '3', front: 'helmets/3f.png', back: 'helmets/3b.png' },
+            { value: '4', front: 'helmets/4f.png', back: 'helmets/4b.png' },
+            { value: '5', front: 'helmets/5f.png', back: 'helmets/5b.png' },
         ];
         let answers = [];
         let currentQuestion = 0;
@@ -74,7 +72,7 @@
             buttonsContainer.innerHTML = '';
             buttonConfigs.forEach(btnData => {
                 const btn = document.createElement('button');
-                btn.className = "bg-gray-300 cursor-pointer group relative overflow-hidden";
+                btn.className = "cursor-pointer outline-none group relative overflow-hidden";
                 btn.innerHTML = `
                     <img src="${btnData.front}" alt="" class="transition-opacity duration-300 opacity-100 group-hover:opacity-0 absolute inset-0 w-full h-full object-contain" />
                     <img src="${btnData.back}" alt="" class="transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute inset-0 w-full h-full object-contain" />
