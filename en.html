@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="src/output.css" rel="stylesheet">
+    <link rel="icon" href="files/icon.ico">
+
+
+    <title>Smart Helm</title>
+</head>
+
+<body class="font-poppins text-sahur">
+    <main class=" w-full h-20 px-10 flex flex-col items-center">
+        <section class=" w-full max-w-4xl mt-20 flex flex-col gap-40" id="main-section">
+            <div class="flex flex-col gap-10">
+                <div class="flex flex-col items-center gap-2">
+                    <p class="bg-tungtung text-center px-3 py-1 rounded-full text-white font-semibold w-fit">~2 min</p>
+                    <h1 class="text-4xl font-semibold text-center">Smart Helmet Design Experiment</h1>
+                </div>
+                <p>We are working on a smart helmet that helps you detect danger from behind. In this short test, you
+                    will see several helmet designs. Each time, you get one simple question.</p>
+                <p class="bg-sahur text-white py-3 px-3 font-semibold rounded-full">Click on the helmet you think best
+                    fits the question!</p>
+            </div>
+            <div class="flex flex-col gap-10">
+                <div>
+                    <h2 class="text-tungtung text-2xl font-semibold" id="question-title">Which helmet shape has the
+                        biggest wow effect?</h2>
+                    <p class="font-medium italic opacity-70" id="question-counter">1/10</p>
+                </div>
+                <div class="grid gap-10 grid-cols-3 grid-flow-row" id="buttons-container">
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const questions = [
+            "Which helmet shape has the biggest wow effect?",
+            "Which design best fits the idea of a 'smart helmet'?",
+            "With which helmet would you feel most comfortable walking down the street?",
+            "Which helmet looks the most neutral?",
+            "Which helmet looks the safest (in terms of design)?",
+            "Which helmet appeals to you the least in terms of design?",
+            "Which helmet looks most suitable for intensive sports activities?",
+            "Which helmet seems most suitable for cycling in daily traffic?",
+            "Which helmet looks the most premium?",
+            "If you had to buy one, based on looks alone, which would you choose?",
+        ];
+        const buttonConfigs = [
+            { value: '1', front: 'helmets/1f.png', back: 'helmets/1b.png' },
+            { value: '2', front: 'helmets/2f.png', back: 'helmets/2b.png' },
+            { value: '3', front: 'helmets/3f.png', back: 'helmets/3b.png' },
+            { value: '4', front: 'helmets/4f.png', back: 'helmets/4b.png' },
+            { value: '5', front: 'helmets/5f.png', back: 'helmets/5b.png' },
+        ];
+        let answers = [];
+        let currentQuestion = 0;
+
+        const questionTitle = document.getElementById('question-title');
+        const questionCounter = document.getElementById('question-counter');
+        const buttonsContainer = document.getElementById('buttons-container');
+        const mainSection = document.getElementById('main-section');
+
+        function showQuestion(idx) {
+            questionTitle.textContent = questions[idx];
+            questionCounter.textContent = `${idx + 1}/${questions.length}`;
+            buttonsContainer.innerHTML = '';
+            buttonConfigs.forEach(btnData => {
+                const btn = document.createElement('button');
+                btn.className = "cursor-pointer outline-none group relative overflow-hidden";
+                btn.innerHTML = `
+                    <img src="${btnData.front}" alt="" class="transition-opacity duration-300 opacity-100 group-hover:opacity-0 absolute inset-0 w-full h-full object-contain" />
+                    <img src="${btnData.back}" alt="" class="transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute inset-0 w-full h-full object-contain" />
+                    <img src="${btnData.front}" alt="" class="invisible w-full h-full object-contain" />
+                `;
+                btn.onclick = () => handleAnswer(btnData.value);
+                buttonsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(answer) {
+            answers.push(answer);
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion(currentQuestion);
+            } else {
+                sendAnswers();
+            }
+        }
+
+        function sendAnswers() {
+            mainSection.innerHTML = `
+                <div class="flex flex-col items-center gap-6">
+                    <div class="text-xl font-semibold">Almost done!</div>
+                    <label class="flex flex-col gap-2 w-full max-w-xs">
+                        <span class="font-medium">Age:</span>
+                        <input type="number" id="user-age" min="0" max="120" required class="border rounded px-3 py-2" placeholder="Enter your age">
+                    </label>
+                    <label class="flex flex-col gap-2 w-full max-w-xs">
+                        <span class="font-medium">In what context do you mostly use a helmet? (optional)</span>
+                        <input type="text" id="user-context" class="border rounded px-3 py-2" placeholder="E.g. cycling, work, etc.">
+                    </label>
+                    <button id="submit-form" class="bg-tungtung text-white font-bold rounded px-6 py-3 mt-2 hover:bg-sahur transition-colors">Submit</button>
+                </div>
+            `;
+            document.getElementById('submit-form').onclick = submitForm;
+        }
+
+        function submitForm() {
+            const age = document.getElementById('user-age').value;
+            const context = document.getElementById('user-context').value;
+            if (!age) {
+                alert('Please enter your age.');
+                return;
+            }
+            const url = "https://script.google.com/macros/s/AKfycbyZzsGmrmuwVOkT8C5y6ORCdtH_s7EtDjAPcr_WIEO9mrcxoBw8nrazw1CcjwysMHWY/exec";
+            fetch(url, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ answers, age, context })
+            });
+            mainSection.innerHTML = '<div class="text-center text-2xl font-semibold">Thank you for your response!</div>';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showQuestion(0);
+        });
+    </script>
+</body>
+
+</html>
