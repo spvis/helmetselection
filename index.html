@@ -7,6 +7,18 @@
     <link href="/src/output.css" rel="stylesheet">
     <link rel="icon" href="/files/icon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tungtung: '#1686FF',
+                        sahur: '#29353F',
+                    },
+                }
+            }
+        }
+    </script>
 
     <title>Smart Helm</title>
 </head>
@@ -53,12 +65,12 @@
             "Welke helm zou u het liefst dragen?",
         ];
         const buttonConfigs = [
-            { value: '1', front: '/helmets/1f.png', back: '/helmets/1b.png' },
-            { value: '2', front: '/helmets/2f.png', back: '/helmets/2b.png' },
-            { value: '3', front: '/helmets/1f.png', back: '/helmets/1b.png' },
-            { value: '4', front: '/helmets/2f.png', back: '/helmets/2b.png' },
-            { value: '5', front: '/helmets/1f.png', back: '/helmets/1b.png' },
-            { value: '6', front: '/helmets/2f.png', back: '/helmets/2b.png' },
+            { value: '1', front: 'helmets/1f.png', back: 'helmets/1b.png' },
+            { value: '2', front: 'helmets/2f.png', back: 'helmets/2b.png' },
+            { value: '3', front: 'helmets/1f.png', back: 'helmets/1b.png' },
+            { value: '4', front: 'helmets/2f.png', back: 'helmets/2b.png' },
+            { value: '5', front: 'helmets/1f.png', back: 'helmets/1b.png' },
+            { value: '6', front: 'helmets/2f.png', back: 'helmets/2b.png' },
         ];
         let answers = [];
         let currentQuestion = 0;
