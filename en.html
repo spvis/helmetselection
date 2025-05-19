@@ -148,7 +148,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ answers, age, context })
             });
-            mainSection.innerHTML = '<div class="text-center text-2xl font-semibold">Thank you for your response!</div>';
+            mainSection.innerHTML = '<div class="text-center text-2xl font-semibold">Thank you for your response! If you came from Prolific: <a class="text-blue-600 hover:underline" href="https://app.prolific.com/submissions/complete?cc=CE74J5AY">https://app.prolific.com/submissions/complete?cc=CE74J5AY</a></div>';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
