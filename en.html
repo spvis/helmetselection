@@ -16,39 +16,43 @@
         <section class=" w-full max-w-4xl mt-20 flex flex-col gap-40" id="main-section">
             <div class="flex flex-col gap-10">
                 <div class="flex flex-col items-center gap-2">
-                    <p class="bg-tungtung text-center px-3 py-1 rounded-full text-white font-semibold w-fit">~2 min</p>
-                    <h1 class="text-4xl font-semibold text-center">Smart Helmet Design Experiment</h1>
+                    <p class="bg-tungtung text-center px-3 py-1 rounded-full text-white font-semibold w-fit">~1 min</p>
+                    <h1 class="text-4xl font-semibold text-center">Smart-helm Vormgevingsexperiment</h1>
                 </div>
-                <p>We are working on a smart helmet that helps you detect danger from behind. In this short test, you
-                    will see several helmet designs. Each time, you get one simple question.</p>
-                <p class="bg-sahur text-white py-3 px-3 font-semibold rounded-full">Click on the helmet you think best
-                    fits the question!</p>
+                <p>We werken aan een slimme helm die je helpt gevaar van achteren te herkennen. In deze korte test zie
+                    je meerdere helmontwerpen. Telkens krijgt u één simpele vraag.</p>
+                <p class="bg-sahur text-white py-3 px-3 font-semibold rounded-full">Klik op de helm die u het best vindt
+                    passen bij de
+                    vraag!</p>
             </div>
             <div class="flex flex-col gap-10">
                 <div>
-                    <h2 class="text-tungtung text-2xl font-semibold" id="question-title">Which helmet shape has the
-                        biggest wow effect?</h2>
+                    <h2 class="text-tungtung text-2xl font-semibold" id="question-title">Welke helm vind u het mooist?
+                    </h2>
                     <p class="font-medium italic opacity-70" id="question-counter">1/10</p>
                 </div>
-                <div class="grid gap-10 grid-cols-3 grid-flow-row" id="buttons-container">
+                <div class="grid mb-20 gap-10 grid-cols-1 md:grid-cols-3 grid-flow-row" id="buttons-container">
 
                 </div>
+                <div class="text-center opacity-50 mb-10 italic">Gemaakt door Sjoerd Visser</div>
             </div>
         </section>
     </main>
 
     <script>
         const questions = [
-            "Which helmet shape has the biggest wow effect?",
-            "Which design best fits the idea of a 'smart helmet'?",
-            "With which helmet would you feel most comfortable walking down the street?",
-            "Which helmet looks the most neutral?",
-            "Which helmet looks the safest (in terms of design)?",
-            "Which helmet appeals to you the least in terms of design?",
-            "Which helmet looks most suitable for intensive sports activities?",
-            "Which helmet seems most suitable for cycling in daily traffic?",
-            "Which helmet looks the most premium?",
-            "If you had to buy one, based on looks alone, which would you choose?",
+            "Welke helmvorm heeft het grootste wow-effect?",
+            "Welke ontwerp past het beste bij het idee van een ‘smart helm’?",
+            "Met welke helm zou u het meest comfortabel over straat lopen?",
+            "Welke helm oogt het meest neutraal?",
+            "Welke helm straalt de meeste veiligheid uit (qua vormgeving)?",
+            "Welke helm spreekt u het minst aan qua design?",
+            "Welke helm oogt het meest geschikt voor intensieve sportactiviteiten?",
+            "Welke helm lijkt het meest geschikt voor fietsen in het dagelijks verkeer?",
+            "Welke helm ziet er het meest premium uit?",
+            "Welke helm trekt volgens u de meeste aandacht op straat?",
+            "Welke helm ziet er het meest comfortabel uit om te dragen?",
+            "Als u er één moest kopen, puur op uiterlijk, welke zou u dan kiezen?",
         ];
         const buttonConfigs = [
             { value: '1', front: 'helmets/1f.png', back: 'helmets/1b.png' },
@@ -56,6 +60,7 @@
             { value: '3', front: 'helmets/3f.png', back: 'helmets/3b.png' },
             { value: '4', front: 'helmets/4f.png', back: 'helmets/4b.png' },
             { value: '5', front: 'helmets/5f.png', back: 'helmets/5b.png' },
+            { value: '5', front: 'helmets/6f.png', back: 'helmets/6b.png' },
         ];
         let answers = [];
         let currentQuestion = 0;
@@ -65,21 +70,40 @@
         const buttonsContainer = document.getElementById('buttons-container');
         const mainSection = document.getElementById('main-section');
 
+        function isMobile() {
+            return window.matchMedia('(max-width: 767px)').matches;
+        }
+
         function showQuestion(idx) {
             questionTitle.textContent = questions[idx];
             questionCounter.textContent = `${idx + 1}/${questions.length}`;
             buttonsContainer.innerHTML = '';
-            buttonConfigs.forEach(btnData => {
-                const btn = document.createElement('button');
-                btn.className = "cursor-pointer outline-none group relative overflow-hidden";
-                btn.innerHTML = `
-                    <img src="${btnData.front}" alt="" class="transition-opacity duration-300 opacity-100 group-hover:opacity-0 absolute inset-0 w-full h-full object-contain" />
-                    <img src="${btnData.back}" alt="" class="transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute inset-0 w-full h-full object-contain" />
-                    <img src="${btnData.front}" alt="" class="invisible w-full h-full object-contain" />
-                `;
-                btn.onclick = () => handleAnswer(btnData.value);
-                buttonsContainer.appendChild(btn);
-            });
+            if (isMobile()) {
+                // Mobile: show front and back side by side, no hover
+                buttonConfigs.forEach(btnData => {
+                    const btn = document.createElement('button');
+                    btn.className = "cursor-pointer outline-none flex flex-row items-center justify-center gap-2 w-full";
+                    btn.innerHTML = `
+                <img src="${btnData.front}" alt="" class="w-1/2 h-auto object-contain" />
+                <img src="${btnData.back}" alt="" class="w-1/2 h-auto object-contain" />
+            `;
+                    btn.onclick = () => handleAnswer(btnData.value);
+                    buttonsContainer.appendChild(btn);
+                });
+            } else {
+                // Desktop: show front, hover to back
+                buttonConfigs.forEach(btnData => {
+                    const btn = document.createElement('button');
+                    btn.className = "cursor-pointer outline-none group relative overflow-hidden";
+                    btn.innerHTML = `
+                <img src="${btnData.front}" alt="" class="transition-opacity duration-300 opacity-100 group-hover:opacity-0 absolute inset-0 w-full h-full object-contain" />
+                <img src="${btnData.back}" alt="" class="transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute inset-0 w-full h-full object-contain" />
+                <img src="${btnData.front}" alt="" class="invisible w-full h-full object-contain" />
+            `;
+                    btn.onclick = () => handleAnswer(btnData.value);
+                    buttonsContainer.appendChild(btn);
+                });
+            }
         }
 
         function handleAnswer(answer) {
@@ -101,8 +125,8 @@
                         <input type="number" id="user-age" min="0" max="120" required class="border rounded px-3 py-2" placeholder="Enter your age">
                     </label>
                     <label class="flex flex-col gap-2 w-full max-w-xs">
-                        <span class="font-medium">In what context do you mostly use a helmet? (optional)</span>
-                        <input type="text" id="user-context" class="border rounded px-3 py-2" placeholder="E.g. cycling, work, etc.">
+                        <span class="font-medium">In what context do you usually use a helmet? (optional)</span>
+                        <input type="text" id="user-context" class="border rounded px-3 py-2" placeholder="e.g. cycling, work, etc.">
                     </label>
                     <button id="submit-form" class="bg-tungtung text-white font-bold rounded px-6 py-3 mt-2 hover:bg-sahur transition-colors">Submit</button>
                 </div>
@@ -129,6 +153,12 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             showQuestion(0);
+        });
+        window.addEventListener('resize', () => {
+            // Re-render buttons on resize to handle orientation/screen size changes
+            if (questionTitle && typeof currentQuestion === 'number' && currentQuestion < questions.length) {
+                showQuestion(currentQuestion);
+            }
         });
     </script>
 </body>
