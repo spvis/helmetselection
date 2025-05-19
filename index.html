@@ -109,6 +109,7 @@
         function handleAnswer(answer) {
             answers.push(answer);
             currentQuestion++;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             if (currentQuestion < questions.length) {
                 showQuestion(currentQuestion);
             } else {
